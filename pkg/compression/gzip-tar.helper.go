@@ -4,23 +4,11 @@ import (
 	"archive/tar"
 	"compress/gzip"
 	"fmt"
+	"github.com/pesoklp13/go-scripts/internal/closeable"
 	"io"
-	"log"
 	"os"
 	"path/filepath"
 )
-
-type closeable interface {
-	Close() error
-}
-
-func closeStream(stream closeable) {
-	err := stream.Close()
-
-	if err != nil {
-		log.Fatal("Unable to close resource")
-	}
-}
 
 type GzipTarHelper interface {
 	Compress(destination string, source string) error
@@ -53,13 +41,13 @@ func (helper *GzipTarHelperImpl) Compress(destination string, source string) err
 		return err
 	}
 
-	defer closeStream(tarFile)
+	defer closeable.CloseStream(tarFile, nil)
 
 	gzWriter := gzip.NewWriter(tarFile)
-	defer closeStream(gzWriter)
+	defer closeable.CloseStream(gzWriter, nil)
 
 	tarWriter := tar.NewWriter(gzWriter)
-	defer closeStream(tarWriter)
+	defer closeable.CloseStream(tarWriter, nil)
 
 	dir, file := filepath.Split(sourceAbsPath)
 
@@ -136,7 +124,7 @@ func (helper *GzipTarHelperImpl) Compress(destination string, source string) err
 func compressFile(file string, tarWriter *tar.Writer) error {
 	data, err := os.Open(file)
 
-	defer closeStream(data)
+	defer closeable.CloseStream(data, nil)
 
 	if err != nil {
 		return err
@@ -159,7 +147,7 @@ func (helper *GzipTarHelperImpl) Uncompress(source string, destination string) e
 		return err
 	}
 
-	defer closeStream(tarFile)
+	defer closeable.CloseStream(tarFile, nil)
 
 	gzReader, err := gzip.NewReader(tarFile)
 
@@ -167,7 +155,7 @@ func (helper *GzipTarHelperImpl) Uncompress(source string, destination string) e
 		return err
 	}
 
-	defer closeStream(gzReader)
+	defer closeable.CloseStream(gzReader, nil)
 
 	tarReader := tar.NewReader(gzReader)
 
