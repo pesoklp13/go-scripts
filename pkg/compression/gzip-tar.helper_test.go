@@ -22,7 +22,7 @@ func createFileMap(m map[string]int) string {
 }
 
 func TestCompressAndUncompress(t *testing.T) {
-	err := os.RemoveAll(paths.ProjectRoot + "/tmp/gzip-results")
+	err := os.RemoveAll(paths.ProjectTempFolder + "/gzip-results")
 	if err != nil {
 		t.Errorf("Unable to setup test case")
 	}
@@ -38,53 +38,53 @@ func TestCompressAndUncompress(t *testing.T) {
 		{
 			name:           "empty folder",
 			pathToCompress: "./testdata/empty/",
-			expectedFile:   paths.ProjectRoot + "/tmp/gzip-results/empty.tar.gz",
-			expectedPath:   paths.ProjectRoot + "/tmp/gzip-results/empty/",
+			expectedFile:   paths.ProjectTempFolder + "/gzip-results/empty.tar.gz",
+			expectedPath:   paths.ProjectTempFolder + "/gzip-results/empty/",
 			dirName:        "empty",
 			expectedFiles: map[string]int{
-				paths.ProjectRoot + "/tmp/gzip-results":              1,
-				paths.ProjectRoot + "/tmp/gzip-results/empty":        1,
-				paths.ProjectRoot + "/tmp/gzip-results/empty.tar.gz": 1,
+				paths.ProjectTempFolder + "/gzip-results":              1,
+				paths.ProjectTempFolder + "/gzip-results/empty":        1,
+				paths.ProjectTempFolder + "/gzip-results/empty.tar.gz": 1,
 			},
 		},
 		{
 			name:           "folder with file",
 			pathToCompress: "./testdata/folder-with-file/",
-			expectedFile:   paths.ProjectRoot + "/tmp/gzip-results/folder-with-file.tar.gz",
-			expectedPath:   paths.ProjectRoot + "/tmp/gzip-results/folder-with-file/",
+			expectedFile:   paths.ProjectTempFolder + "/gzip-results/folder-with-file.tar.gz",
+			expectedPath:   paths.ProjectTempFolder + "/gzip-results/folder-with-file/",
 			dirName:        "folder-with-file",
 			expectedFiles: map[string]int{
-				paths.ProjectRoot + "/tmp/gzip-results":                                    1,
-				paths.ProjectRoot + "/tmp/gzip-results/folder-with-file":                   1,
-				paths.ProjectRoot + "/tmp/gzip-results/folder-with-file/single-file-1.txt": 1,
-				paths.ProjectRoot + "/tmp/gzip-results/folder-with-file.tar.gz":            1,
+				paths.ProjectTempFolder + "/gzip-results":                                    1,
+				paths.ProjectTempFolder + "/gzip-results/folder-with-file":                   1,
+				paths.ProjectTempFolder + "/gzip-results/folder-with-file/single-file-1.txt": 1,
+				paths.ProjectTempFolder + "/gzip-results/folder-with-file.tar.gz":            1,
 			},
 		},
 		{
 			name:           "folder with folder",
 			pathToCompress: "./testdata/folder-with-folder/",
-			expectedFile:   paths.ProjectRoot + "/tmp/gzip-results/folder-with-folder.tar.gz",
-			expectedPath:   paths.ProjectRoot + "/tmp/gzip-results/folder-with-folder/",
+			expectedFile:   paths.ProjectTempFolder + "/gzip-results/folder-with-folder.tar.gz",
+			expectedPath:   paths.ProjectTempFolder + "/gzip-results/folder-with-folder/",
 			dirName:        "folder-with-folder",
 			expectedFiles: map[string]int{
-				paths.ProjectRoot + "/tmp/gzip-results":                                                       1,
-				paths.ProjectRoot + "/tmp/gzip-results/folder-with-folder":                                    1,
-				paths.ProjectRoot + "/tmp/gzip-results/folder-with-folder/folder-with-file":                   1,
-				paths.ProjectRoot + "/tmp/gzip-results/folder-with-folder/folder-with-file/single-file-3.txt": 1,
-				paths.ProjectRoot + "/tmp/gzip-results/folder-with-folder/single-file-2.txt":                  1,
-				paths.ProjectRoot + "/tmp/gzip-results/folder-with-folder.tar.gz":                             1,
+				paths.ProjectTempFolder + "/gzip-results":                                                       1,
+				paths.ProjectTempFolder + "/gzip-results/folder-with-folder":                                    1,
+				paths.ProjectTempFolder + "/gzip-results/folder-with-folder/folder-with-file":                   1,
+				paths.ProjectTempFolder + "/gzip-results/folder-with-folder/folder-with-file/single-file-3.txt": 1,
+				paths.ProjectTempFolder + "/gzip-results/folder-with-folder/single-file-2.txt":                  1,
+				paths.ProjectTempFolder + "/gzip-results/folder-with-folder.tar.gz":                             1,
 			},
 		},
 		{
 			name:           "simple file",
 			pathToCompress: "./testdata/single-file.txt",
-			expectedFile:   paths.ProjectRoot + "/tmp/gzip-results/single-file.tar.gz",
-			expectedPath:   paths.ProjectRoot + "/tmp/gzip-results/single-file.txt",
+			expectedFile:   paths.ProjectTempFolder + "/gzip-results/single-file.tar.gz",
+			expectedPath:   paths.ProjectTempFolder + "/gzip-results/single-file.txt",
 			dirName:        "",
 			expectedFiles: map[string]int{
-				paths.ProjectRoot + "/tmp/gzip-results":                    1,
-				paths.ProjectRoot + "/tmp/gzip-results/single-file.tar.gz": 1,
-				paths.ProjectRoot + "/tmp/gzip-results/single-file.txt":    1,
+				paths.ProjectTempFolder + "/gzip-results":                    1,
+				paths.ProjectTempFolder + "/gzip-results/single-file.tar.gz": 1,
+				paths.ProjectTempFolder + "/gzip-results/single-file.txt":    1,
 			},
 		},
 	} {
@@ -116,9 +116,9 @@ func TestCompressAndUncompress(t *testing.T) {
 			}
 		}
 
-		err = filepath.Walk(paths.ProjectRoot+"/tmp/gzip-results", walkerFactory())
+		err = filepath.Walk(paths.ProjectTempFolder+"/gzip-results", walkerFactory())
 
-		err = os.RemoveAll(paths.ProjectRoot + "/tmp/gzip-results")
+		err = os.RemoveAll(paths.ProjectTempFolder + "/gzip-results")
 		if err != nil {
 			t.Errorf("Unable to clear test context")
 		}
@@ -128,5 +128,5 @@ func TestCompressAndUncompress(t *testing.T) {
 		}
 	}
 
-	err = os.Remove(paths.ProjectRoot + "/tmp")
+	err = os.Remove(paths.ProjectTempFolder)
 }
